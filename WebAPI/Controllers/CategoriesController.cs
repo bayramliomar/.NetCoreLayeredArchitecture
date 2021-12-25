@@ -11,18 +11,19 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductsController : ControllerBase
+    public class CategoriesController : ControllerBase
     {
-        IProductService _productService;
-        public ProductsController(IProductService productService)
+        ICategoryService _categoryService;
+
+        public CategoriesController(ICategoryService categoryService)
         {
-            _productService = productService;
+            _categoryService = categoryService;
         }
-        
+
         [HttpPost("add")]
-        public IActionResult Add(Product product)
+        public IActionResult Add(Category category)
         {
-            var result= _productService.Add(product);
+            var result = _categoryService.Add(category);
             if (result.Success)
             {
                 return Ok(result.Message);
@@ -31,9 +32,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("delete")]
-        public IActionResult Delete(Product product)
+        public IActionResult Delete(Category category)
         {
-            var result = _productService.Delete(product);
+            var result = _categoryService.Delete(category);
             if (result.Success)
             {
                 return Ok(result.Message);
@@ -42,9 +43,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("update")]
-        public IActionResult Update(Product product)
+        public IActionResult Update(Category category)
         {
-            var result = _productService.Update(product);
+            var result = _categoryService.Update(category);
             if (result.Success)
             {
                 return Ok(result.Message);
@@ -52,21 +53,10 @@ namespace WebAPI.Controllers
             return BadRequest(result.Message);
         }
 
-        [HttpGet("get")]
-        public IActionResult Get(int productId)
-        {
-            var result = _productService.Get(productId);
-            if (result.Success)
-            {
-                return Ok(result.Data);
-            }
-            return BadRequest(result.Message);
-        }
-
         [HttpGet("getall")]
         public IActionResult GetList()
         {
-            var result = _productService.GetList();
+            var result = _categoryService.GetList();
             if (result.Success)
             {
                 return Ok(result.Data);
@@ -74,10 +64,10 @@ namespace WebAPI.Controllers
             return BadRequest(result.Message);
         }
 
-        [HttpGet("getallbycategoryid")]
-        public IActionResult GetListByCategoryId(int categoryId)
+        [HttpGet("get")]
+        public IActionResult Get(int categoryId)
         {
-            var result = _productService.GetListByCategoryId(categoryId);
+            var result = _categoryService.Get(categoryId);
             if (result.Success)
             {
                 return Ok(result.Data);
