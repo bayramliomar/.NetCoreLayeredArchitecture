@@ -21,14 +21,14 @@ namespace Business.Concrete
             _userService = userService;
             _tokenHelper = tokenHelper;
         }
-        public IDataResult<AccessToken> cerateAccessToken(User user)
+        public DataResult<AccessToken> cerateAccessToken(User user)
         {
             var claims = _userService.GetClaims(user);
             var accessToken = _tokenHelper.CreateToken(user, claims);
             return new SuccessDataResult<AccessToken>(accessToken, Messages.AccessTokenCreated);
         }
 
-        public IDataResult<User> Login(UserForLoginDto userForLoginDto)
+        public DataResult<User> Login(UserForLoginDto userForLoginDto)
         {
             var user = _userService.GetByMail(userForLoginDto.Email);
             if (user == null)
@@ -44,7 +44,7 @@ namespace Business.Concrete
             return new SuccessDataResult<User>(user,Messages.SuccessfulLogin);
         }
 
-        public IDataResult<User> Register(UserForRegisterDto userForRegisterDto)
+        public DataResult<User> Register(UserForRegisterDto userForRegisterDto)
         {
             var userExist = UserExists(userForRegisterDto.Email);
             if (userExist.Success)
@@ -67,7 +67,7 @@ namespace Business.Concrete
             return new ErrorDataResult<User>(userExist.Message);
         }
 
-        public IResult UserExists(string email)
+        public Result UserExists(string email)
         {
             var user = _userService.GetByMail(email);
             if (user != null)
