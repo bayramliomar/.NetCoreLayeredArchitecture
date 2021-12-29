@@ -1,8 +1,12 @@
 ﻿using Business.Abstract;
 using Business.Constants;
+using Business.Validation.FluentValidation;
+using Core.CrossCuttingConcerns.Validation.FluentValidation;
+using Core.Utilities.Aspects.Autofac.Validation;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
+using FluentValidation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,11 +16,15 @@ namespace Business.Concrete
 {
     public class ProductManager : IProductService
     {
+        //Cross Cutting Concerns-Validation,Auth,Log,Transaction,Performance,Cache
+        //AOP-Aspect Oriented Programming
         IProductDal _productDal;
         public ProductManager(IProductDal productDal)
         {
             _productDal = productDal;
         }
+
+        [ValidationAspect(typeof(ProductValidator))]
         public Result Add(Product product)
         {
             _productDal.Add(product);
