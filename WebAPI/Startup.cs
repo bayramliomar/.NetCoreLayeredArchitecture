@@ -1,3 +1,5 @@
+using Core.DependencyResolvers;
+using Core.Extensions;
 using Core.Utilities.Security.Encryption;
 using Core.Utilities.Security.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -35,19 +37,24 @@ namespace WebAPI
                 options.AddPolicy("AllowOrigin", builder => builder.WithOrigins("https://localhost:44325/"));
             });
             var tokenOptions = Configuration.GetSection("TokenOptions").Get<TokenOptions>();
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options=>
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidateIssuer=true,
-                    ValidateAudience=true,
-                    ValidateLifetime=true,
-                    ValidIssuer=tokenOptions.Issure,
-                    ValidAudience=tokenOptions.Audience,
-                    ValidateIssuerSigningKey=true,
-                    IssuerSigningKey=SecurityKeyHelper.CreateSecurityKey(tokenOptions.SecurityKey)
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidIssuer = tokenOptions.Issure,
+                    ValidAudience = tokenOptions.Audience,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = SecurityKeyHelper.CreateSecurityKey(tokenOptions.SecurityKey)
 
                 };
+            });
+
+            services.AddDependencyResolvers(new CoreModule[] 
+            {
+                new CoreModule()
             });
         }
 
@@ -59,7 +66,7 @@ namespace WebAPI
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseCors(builder=>builder.WithOrigins("https://localhost:44325/").AllowAnyHeader());
+            app.UseCors(builder => builder.WithOrigins("https://localhost:44325/").AllowAnyHeader());
 
             app.UseHttpsRedirection();
 

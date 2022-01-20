@@ -2,6 +2,7 @@
 using Business.Constants;
 using Business.Validation.FluentValidation;
 using Core.CrossCuttingConcerns.Validation.FluentValidation;
+using Core.Utilities.Aspects.Autofac.Transaction;
 using Core.Utilities.Aspects.Autofac.Validation;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
@@ -55,6 +56,14 @@ namespace Business.Concrete
         public Result Update(Product product)
         {
             _productDal.Update(product);
+            return new SuccessResult(Messages.ProductUpdated);
+        }
+
+        [TransactionScopeAspect]
+        public Result TransactionalOperation(Product product)
+        {
+            _productDal.Update(product);
+            _productDal.Add(product);
             return new SuccessResult(Messages.ProductUpdated);
         }
     }
